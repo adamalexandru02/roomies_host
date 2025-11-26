@@ -1,0 +1,179 @@
+@font-face {
+  font-family: 'SingleDay';
+  src: url(assets/fonts/FuzzyBubbles-Bold.ttf);
+}
+
+@keyframes skewit {
+  0% {
+    transform: skew(0,0);
+  }
+
+  50% {
+    transform: skew(1deg, 1deg);
+  }
+
+  100% {
+    transform: skew(0,0);
+  }
+}
+body {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #fff;
+  font-family: 'SingleDay';
+  color: #000;
+    -webkit-user-select: none; /* Safari/Chrome */
+  -moz-user-select: none;    /* Firefox */
+  -ms-user-select: none;     /* IE/Edge */
+  user-select: none;         /* Standard */
+}
+p,h1,h2,h3 {
+  padding: 0!important;
+  margin-top: 0!important;
+}
+#root {
+    margin: 0 auto;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+h1 {
+  font-size: 64px;
+}
+
+h2 {
+  font-size: 48px;
+}
+
+h3 {
+  font-size: 36px;
+}
+
+p {
+  font-size: 24px;
+}
+
+
+.sound {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+}
+
+.sound img {
+  width: 180px;
+  height: 180px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px;
+  border-image-source: url('assets/images/sketch_border2.png');
+  border-image-slice: 45;        /* how much to slice inward from each edge */
+  border-image-width: 15px;      /* thickness of the border */
+  border-image-outset: 0;        /* optional offset */
+  border-image-repeat: stretch;  /* or round, repeat, space */
+  animation: skewit 2s ease-in infinite;
+}
+
+.card .preview {
+  width: 100px;
+  height: auto;
+}
+
+.card .user img {
+  width: 30px;
+  height: 50px
+}
+
+.button {
+  cursor: pointer;
+  display: flex;
+  padding: 10px;
+  border-image-source: url('assets/images/sketch_borders.png');
+  border-image-slice: 60;
+  border-image-width: 10px;
+  border-image-outset: 0;
+  font-size: 32px;
+  justify-content: center;
+  border-image-repeat: stretch;
+  animation: skewit 2s ease-in infinite;
+}
+.button:hover {
+  animation: skewit 0.5s ease-in infinite;
+  transform: scale(3);
+
+}
+
+.head-users {
+  position: fixed;
+  top: 40px;
+  right: 160px;
+}
+
+.head-users .users {
+  flex-wrap: nowrap;
+}
+
+.head-users .user {
+  width: 40px;
+  flex-direction: column;
+}
+
+.head-users .user img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.users {
+  display: flex;
+  max-width: 80vw;
+  flex-wrap: wrap;
+}
+
+.user {
+  width: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.user img {
+  width: 100px;
+  height: auto;
+}
+
+.timer {
+  font-size: 32px;
+}
+
+.progress-bar {
+  width: 50vw;
+  margin: auto;
+  padding: 10px;
+  position: relative;
+  border-image-source: url('assets/images/sketch_borders.png');
+  border-image-slice: 60;
+  border-image-width: 10px;
+  border-image-outset: 0;
+}
+.progress {
+  width: 40px;
+  height: 10px;
+  border-radius: 2px;
+  transform: skew(10deg, 0deg);
+  display: block;
+  background-color: #000;
+  transition: 0.05s ease-out;
+}
