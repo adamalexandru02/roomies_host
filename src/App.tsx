@@ -1,192 +1,116 @@
-import {useState, useEffect} from 'react'
-import {useGameStore} from './store/gameStore'
+import { useState, useEffect } from 'react'
+import {useProjectStore} from './store/projectStore'
 import './App.css'
-import avatar from './assets/images/avatar.png'
 import Audio from './components/Audio'
+import Users from './components/Users'
+
+import Desen from './games/Desen/Desen'
+
+import deseneaza from './assets/images/deseneaza.png'
 
 const App = () => {
-    const {connect, cleanup, screen} = useGameStore()
+  const { connect, cleanup, screen, setScreen } = useProjectStore()
 
-    useEffect(() => {
-        connect()
-        return () => cleanup()
-    }, [connect, cleanup])
+  useEffect(() => {
+    connect()
+    return () => cleanup()
+  }, [connect, cleanup])
 
-    return (
-        <>
-            <Audio/>
-            <Users/>
-            {screen === 1 && <Connect/>}
-            {screen === 2 && <Titles/>}
-            {screen === 3 && <GiveTitles/>}
-            {screen === 4 && <Vote/>}
-            {screen === 5 && <Score/>}
-        </>
-    )
+  return (
+    <>
+      <Header/>
+      <Intro />
+      {screen == 0 && <Connect />}
+      {screen == 1 && <ChoseGame />}
+      {screen == 2 && <Game><Desen /></Game>}
+    </>
+  )
 }
 
-const Users = () => {
-    const {users} = useGameStore();
-    return (
-        <div className='head-users'>
-            <div className="users">
-                {users.map((user) => (
-                    <div key={user.username} className="user">
-                        <img src={user.avatar || avatar} alt="avatar"/>
-                        <span>{user.nickname || '...'}</span>
-                    </div>
-                ))}
-            </div>
-        </div>
+const Intro = () => {
+  const [fade, setFade] = useState(false);
 
-    )
+  // 1. Read Zustand store once at the top (correct usage)
+  const {roomCode, isConected, setScreen} = useProjectStore();
+
+  useEffect(() => {
+    if (!roomCode) return;
+    
+    // 2. Delay fade by 5 seconds
+    const timeout = setTimeout(() => {
+      setFade(true);
+    }, 2000);
+
+    // 3. Cleanup if component unmounts or roomCode changes
+    return () => {clearTimeout(timeout);}
+  }, [roomCode]);  // runs only when roomCode changes
+
+  return (
+    <div className={`intro ${fade ? "fade" : ""}`}>
+      <div className={"R"}></div>
+      <div className={"O"}></div>
+      <div className={"O2"}></div>
+      <div className={"M"}></div>
+      <div className={"I"}></div>
+      <div className={"E"}></div>
+      <div className={"S"}></div>
+    </div>
+  )
 }
+
+const Header = () => {
+  const { users } = useProjectStore();
+
+  return (
+    <div className='header'>
+      <Users users={users}  />
+      <Audio/>
+    </div>
+  )
+}
+
 
 const Connect = () => {
-    const {users, roomCode} = useGameStore()
+  const {users, roomCode, cleanup, connect} = useProjectStore()
 
-    return (<>
-        <div className="card">
-            <h1>Sǎ desenǎm</h1>
-            <h3>{roomCode || '----'}</h3>
-            <p>Așteptǎm autoportretele...</p>
+  return (<>
+    <div className='logo'></div>
+    <div className={"box"}>
+      
+      <h1>Camera</h1>
+      <div className='row ai-c mb-20 relative'>
+        <h3 className="deep">{roomCode || '----'}</h3> 
+        <div className='refresh' onClick={() => {cleanup(); connect();}}></div>
+      </div>
+      <p>Așteptǎm sa seconecteze toata lumea...</p>
+    </div>
+    <div className='joined-users'>
+        <Users users={users} useNicknames={true}/>
+    </div>
+  </>)
+}
+
+const ChoseGame = () => {
+  const { startGame } = useProjectStore();
+  return (<>
+    <div className={"box"}>
+      <h1>Jocuri</h1>
+      <div className="games">
+        <div className="game" onClick={() => startGame()}>
+          <img src={deseneaza}/>
+          <span>Sa desenam</span>
         </div>
-        <div className="users">
-            {users.map((user) => (
-                <div key={user.username} className="user">
-                    <img src={user.avatar || avatar} alt="avatar"/>
-                    <span>{user.nickname || '...'}</span>
-                </div>
-            ))}
-        </div>
-    </>)
+      </div>
+    </div>
+  </>)
 }
 
-const Titles = () => {
-    const {timeOver} = useGameStore();
-
-    return (
-        <div className="card">
-            <h1>Sǎ desenǎm</h1>
-            <p>Fiecare dintre voi a primit un titlu pentru desenul sǎu...</p>
-            <p>Cine nu e gata îl iau cu lopata!</p>
-            <ProgressBar timeInSeconds={60} callback={() => timeOver()}/>
-        </div>
-    )
-}
-
-
-const ProgressBar = ({timeInSeconds, callback}) => {
-    const [timer, setTimer] = useState(timeInSeconds * 1000)
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setTimer((t) => {
-                if (t >= 1000) {
-                    return (t - 1000);
-                } else {
-                    console.log("gata:", t);
-                    clearInterval(interval)
-                    callback()
-                    return 0;
-                }
-            })
-        }, 1000);
-
-        return () => clearInterval(interval)
-    }, [])
-
-    return (
-        <>
-            <div className="timer">{timer / 1000}</div>
-            <div className="progress-bar">
-                <div className="progress" style={{width: `${timer / (timeInSeconds * 10)}%`}}></div>
-            </div>
-        </>
-    )
-}
-
-const GiveTitles = () => {
-    const {drawing, goToVote} = useGameStore();
-
-
-    return (
-        <>
-            <div className="card">
-                <h1>Ce e asta?</h1>
-                <p>Alege un titlu potrivit</p>
-            </div>
-            <img src={drawing.image}/>
-
-            <ProgressBar timeInSeconds={10} callback={() => goToVote()}/>
-        </>
-    );
-}
-
-const Vote = () => {
-    const {drawing, drawingTitles} = useGameStore();
-
-    return (
-        <>
-            <div className="card">
-                <h1> Voteaza titlul </h1>
-                <p>Ce? Toata lumea s-a gandit la acleasi lucru?</p>
-                <img src={drawing.image}/>
-                <ul>
-                    {drawingTitles.map((title) => (<p key={title.title}>{title.title}</p>))}
-                </ul>
-            </div>
-        </>
-    );
-}
-
-const Score = () => {
-    const {drawing, drawingTitles, nextDrawing} = useGameStore();
-    const [currentTitle, setCurrentTitle] = useState(0);
-
-    useEffect(() => {
-        let timer;
-
-        if (drawingTitles.length === 0) return;
-
-        if (currentTitle === drawingTitles.length - 1) {
-            console.log("nextdrawing?!", currentTitle);
-            timer = setTimeout(() => {
-                nextDrawing();
-            }, 5000);
-        } else {
-            console.log("nextTitle?!", currentTitle);
-            timer = setTimeout(() => {
-                setCurrentTitle(prev => prev + 1);
-            }, 5000);
-        }
-
-        return () => clearTimeout(timer);   // prevent stacked timeouts
-    }, [currentTitle, drawingTitles]);
-
-    const title = drawingTitles[currentTitle];
-    return (
-        <>
-            <div className="card">
-                <h1> Rezultatele </h1>
-                <p> Care o ghicit?</p>
-                <img className="preview" src={drawing.image}/>
-                <div>
-                    <span key={title.title}>"{title.title}"</span>
-                    <div className='users'>
-                        {title.votes.map((user) => {
-                            return (
-                                <div className='user' key={user.user_id}>
-                                    <img src={user.avatar}/>
-                                    {user.nickname}
-                                </div>
-                            )
-                        })}
-                    </div>
-                </div>
-            </div>
-        </>
-    );
-}
-
+const Game = ({ children }) => {
+  return (
+    <div className="game_preview">
+      {children}
+    </div>
+  );
+};
 
 export default App

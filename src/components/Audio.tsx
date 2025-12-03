@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 
 import backgroundMusic from '../assets/music/funny-cartoon-421644.mp3'
-import soundOn from '../assets/images/sound_on.png'
-import soundOff from '../assets/images/sound_off.png'
+import soundOn from '../assets/images/mute.svg'
+import soundOff from '../assets/images/volume.svg'
 
 const Audio = () => {
   const audioRef = useRef(null);
@@ -29,13 +29,15 @@ const Audio = () => {
     }
   }
     
-  return (
-    <div>
+  return (<>
+    <div className="sound"onClick={toggleMusic}>
       <audio ref={audioRef} src={backgroundMusic} />
-      <div className="sound" onClick={toggleMusic}>
-        {isPlaying ? <img src={soundOn} /> : <img src={soundOff} />}
-      </div>
+      {isPlaying ? <img src={soundOn} /> : <img src={soundOff} />}
     </div>
+    <div style={{width: 40, height: 40, marginLeft: 20, background: 'red'}} onClick={() => window.location.reload()}></div>
+
+  </>
+
   )
 }
 

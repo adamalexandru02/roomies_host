@@ -1,0 +1,139 @@
+@font-face {
+  font-family: 'SingleDay';
+  src: url(assets/fonts/FuzzyBubbles-Bold.ttf);
+}
+
+@keyframes skewit {
+  0% {
+    transform: skew(0,0);
+  }
+
+  50% {
+    transform: skew(1deg, 1deg);
+  }
+
+  100% {
+    transform: skew(0,0);
+  }
+}
+
+@keyframe fadeScore {
+  0% {
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.body {
+  background-color: #fff;
+  width: 100%;
+  height: 100%;
+  color: #000!important;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: 'SingleDay'!important;
+}
+
+.body h1 {
+  font-size: 48px;
+}
+
+.body h2 {
+  font-size: 36px;
+}
+
+.body h3 {
+  font-size: 24px;
+}
+
+.body p {
+  font-size: 18px;
+}
+
+.body .card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px;
+  border-image-source: url('assets/images/sketch_border2.png');
+  border-image-slice: 45;        /* how much to slice inward from each edge */
+  border-image-width: 15px;      /* thickness of the border */
+  border-image-outset: 0;        /* optional offset */
+  border-image-repeat: stretch;  /* or round, repeat, space */
+  animation: skewit 2s ease-in infinite;
+}
+
+.body .card img {
+  height: 300px;
+}
+
+.body .card .preview {
+  width: 100px;
+  height: auto;
+}
+
+.body .card .user img {
+  width: 30px;
+  height: 50px
+}
+.body .user .label {
+  padding:5px;
+  border: 2px solid black;
+  border-radius: 50%; 
+  animation: 5s fadeScore ease-in;
+}
+
+.body .button {
+  cursor: pointer;
+  display: flex;
+  padding: 10px;
+  border-image-source: url('assets/images/sketch_borders.png');
+  border-image-slice: 60;
+  border-image-width: 10px;
+  border-image-outset: 0;
+  font-size: 32px;
+  justify-content: center;
+  border-image-repeat: stretch;
+  animation: skewit 2s ease-in infinite;
+}
+.body .button:hover {
+  animation: skewit 0.5s ease-in infinite;
+  transform: scale(3);
+
+}
+
+.body .timer {
+  margin-top: 100px;
+  font-size: 32px;
+}
+
+.body .progress-bar {
+  width: 50%;
+  padding: 10px;
+
+  position: relative;
+  border-image-source: url('assets/images/sketch_borders.png');
+  border-image-slice: 60;
+  border-image-width: 10px;
+  border-image-outset: 0;
+}
+.body .progress {
+  width: 40px;
+  height: 10px;
+  border-radius: 2px;
+  transform: skew(10deg, 0deg);
+  display: block;
+  background-color: #000;
+  transition: 0.05s ease-out;
+}
