@@ -14,6 +14,7 @@ export const useProjectStore = create((set, get) => ({
     roomCode: null,
     isHost: false,
     screen: 0,
+    gameStarted: false,
 
     isConnecting: false,
     isConnected: false,
@@ -34,6 +35,7 @@ export const useProjectStore = create((set, get) => ({
     },
     startGame: () => {
       get().setScreen(2)
+      set({gameStarted: true});
     },
 
     async handleMessage(matchData) {
@@ -73,6 +75,9 @@ export const useProjectStore = create((set, get) => ({
             }
 
             case "pick_game": {
+                if(get().gameStarted) {
+                  return;
+                }
                 set({screen: 1});
                 const payload ={
                     type: 'pick_game',
@@ -104,7 +109,7 @@ export const useProjectStore = create((set, get) => ({
         set({isConnecting: true})
 
         try {
-            const client = new Nakama.Client("jocuri-server-parola", "172.20.10.10", "7350", false)
+            const client = new Nakama.Client("jocuri-server-parola", "192.168.1.113", "7350", false)
             set({client})
 
             let deviceId = localStorage.getItem("device_id")
@@ -134,6 +139,7 @@ export const useProjectStore = create((set, get) => ({
     async joinOrCreateRoom()  {
         const {socket, isHost, matchId, client, session} = get()
         // Create match only once
+        console.log("data", socket, isHost, matchId, client, session);
         const rpcResponse = await client.rpc(session, "create_custom_match", {})
         const roomData = rpcResponse.payload
         console.log("Created room:", roomData)
@@ -219,6 +225,7 @@ export const useProjectStore = create((set, get) => ({
             socket: null,
             client: null,
             session: null,
+            screen: 0,
             users: [],
             matchId: null,
             roomCode: null,

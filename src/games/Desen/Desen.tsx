@@ -1,19 +1,37 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useGameStore } from './store/gameStore'
 import './Desen.css'
 import Users from "../../components/Users"
 import { useProjectStore } from '../../store/projectStore'
 
+// Sound
+import soundManager from '../../components/Sound/SoundManager';
+import ticSound from '../../assets/sounds/tic.mp3';
+import tacSound from '../../assets/sounds/tac.mp3';
+import clapsSound from '../../assets/sounds/claps.mp3';
+import musicSound from  '../../assets/sounds/music.mp3';
+import wrongSound from '../../assets/sounds/wrong.mp3';
+
 const Desen = () => {
     const { screen, startGame } = useGameStore();
 
     useEffect(() => {
-      startGame()
+      // startGame();
+      // soundManager.playMusic(); // optional auto-play
     }, []);
+
+    // sound effects
+    soundManager.loadSound("claps", clapsSound);
+    soundManager.loadSound("wrong", wrongSound);
+    soundManager.loadSound("tic", ticSound);
+    soundManager.loadSound("tac", tacSound);
+    // background music
+    soundManager.loadMusic(musicSound);
 
     return (
         <>
           <div className='body'>
+            {screen === -1 && <StartGame />}
             {screen === 0 && <Titles/>}
             {screen === 1 && <GiveTitles/>}
             {screen === 2 && <Vote/>}
@@ -23,7 +41,16 @@ const Desen = () => {
         </>
     )
 }
-
+const StartGame = () => {
+  const { startGame } = useGameStore();
+  return (
+    <div className="card">
+      <h1>Sǎ desenǎm</h1>
+      <p>E toata lumea gata?</p>
+      <div className='button-desen' onClick={() => {soundManager.playMusic(); startGame();}}>Start</div>
+    </div>
+  )
+}
 const Titles = () => {
     const { timeOver } = useGameStore();
 
@@ -32,7 +59,7 @@ const Titles = () => {
             <h1>Sǎ desenǎm</h1>
             <p>Fiecare dintre voi a primit un titlu pentru desenul sǎu...</p>
             <p>Cine nu e gata îl iau cu lopata!</p>
-            <ProgressBar timeInSeconds={60} callback={() => timeOver()}/>
+            <ProgressBar timeInSeconds={100} callback={() => timeOver()}/>
         </div>
     )
 }
@@ -43,6 +70,11 @@ const ProgressBar = ({timeInSeconds, callback}) => {
     useEffect(() => {
         const interval = setInterval(() => {
             setTimer((t) => {
+                if(t%2 === 0) {
+                  soundManager.playSound("tic")
+                } else {
+                  soundManager.playSound("tac")
+                }
                 if (t >= 1000) {
                     return (t - 1000);
                 } else {
@@ -79,13 +111,17 @@ const GiveTitles = () => {
                 <img src={drawing.image}/>
             </div>
 
-            <ProgressBar timeInSeconds={100} callback={() => goToVote()}/>
+            <ProgressBar timeInSeconds={60} callback={() => goToVote()}/>
         </>
     );
 }
 
 const Vote = () => {
-    const {drawing, drawingTitles} = useGameStore();
+    const {drawing, drawingTitles, goToScore} = useGameStore();
+
+    const shuffledTitles = useMemo(() => {
+      return [...drawingTitles].sort(() => Math.random() - 0.5);
+    }, [drawingTitles]);
 
     return (
         <>
@@ -93,9 +129,10 @@ const Vote = () => {
                 <h1> Voteaza titlul </h1>
                 <p>Ce? Toata lumea s-a gandit la acleasi lucru?</p>
                 <img src={drawing.image}/>
-                <ul>
-                    {drawingTitles.map((title) => (<p key={title.title}>{title.title}</p>))}
-                </ul>
+                <div className='titles'>
+                    {shuffledTitles.map((title) => (<p key={title.title}>{title.title}</p>))}
+                </div>
+                <ProgressBar timeInSeconds={60} callback={() => goToScore()}/>
             </div>
         </>
     );
@@ -112,11 +149,13 @@ const Score = () => {
 
         if (currentTitle === 0) {
             console.log("nextdrawing?!", currentTitle);
+            soundManager.playSound("claps")
             timer = setTimeout(() => {
                 nextDrawing();
             }, 5000);
         } else {
             console.log("nextTitle?!", currentTitle);
+            soundManager.playSound("wrong")
             timer = setTimeout(() => {
                 setCurrentTitle(prev => prev -1);
             }, 5000);
@@ -128,13 +167,16 @@ const Score = () => {
     const title = drawingTitles[currentTitle];
     return (
         <>
-            <div className="card">
+            <div className="card" style={{minWidth: '50vw'}}>
                 <h1> Rezultatele </h1>
                 <p> Care o ghicit?</p>
                 <img className="preview" src={drawing.image}/>
-                <div>
-                    <span key={title.title}>"{title.title}"</span>
-                    <Users users={title.votes} useNicknames={true} extra={score} />
+                <div className='titles'>
+                  <p key={title.title}>"{title.title}"</p>
+                </div>
+
+                <div style={{height: 140}}>
+                    <Users users={title.votes} animation={"buble"} showWithDelay={300} useNicknames={true} extra={score} />
                 </div>
             </div>
         </>
@@ -150,7 +192,7 @@ const TotalScore = () => {
       let timerx = setTimeout(() => {
             console.log("ce?!");
               sendRestart()
-          }, 3000);
+          }, users.length * 1500 );
 
       return () => clearTimeout(timerx);   // prevent stacked timeouts
   }, []);
@@ -162,7 +204,7 @@ const TotalScore = () => {
           <h1> Podium </h1>
           <p> Care sta bine pe ghicit?</p>
           <div>
-              <Users users={users} useNicknames={true} extra={totalScore}/>
+              <Users users={users} animation={"buble"} showWithDelay={1000} useNicknames={true} extra={totalScore}/>
           </div>
       </div>
     </>

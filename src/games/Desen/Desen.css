@@ -94,10 +94,10 @@
   animation: 5s fadeScore ease-in;
 }
 
-.body .button {
+.body .button-desen {
   cursor: pointer;
   display: flex;
-  padding: 10px;
+  padding: 10px 30px;
   border-image-source: url('assets/images/sketch_borders.png');
   border-image-slice: 60;
   border-image-width: 10px;
@@ -107,7 +107,7 @@
   border-image-repeat: stretch;
   animation: skewit 2s ease-in infinite;
 }
-.body .button:hover {
+.body .button-desen:hover {
   animation: skewit 0.5s ease-in infinite;
   transform: scale(3);
 
@@ -136,4 +136,19 @@
   display: block;
   background-color: #000;
   transition: 0.05s ease-out;
+}
+
+.titles {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.titles p {
+  padding: 20px!important;
+  border-image-source: url('assets/images/sketch_borders.png');
+  border-image-slice: 60;
+  border-image-width: 10px;
+  border-image-outset: 0;
 }

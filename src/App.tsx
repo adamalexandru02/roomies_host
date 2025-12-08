@@ -1,9 +1,13 @@
 import { useState, useEffect } from 'react'
-import {useProjectStore} from './store/projectStore'
+import { useProjectStore } from './store/projectStore'
 import './App.css'
+
+//  Componente
 import Audio from './components/Audio'
 import Users from './components/Users'
+import RoomCode from './components/RoomCode'
 
+// Jocuri
 import Desen from './games/Desen/Desen'
 
 import deseneaza from './assets/images/deseneaza.png'
@@ -64,6 +68,7 @@ const Header = () => {
   return (
     <div className='header'>
       <Users users={users}  />
+      <RoomCode />
       <Audio/>
     </div>
   )
@@ -71,18 +76,15 @@ const Header = () => {
 
 
 const Connect = () => {
-  const {users, roomCode, cleanup, connect} = useProjectStore()
+  const { users } = useProjectStore()
 
   return (<>
     <div className='logo'></div>
     <div className={"box"}>
       
       <h1>Camera</h1>
-      <div className='row ai-c mb-20 relative'>
-        <h3 className="deep">{roomCode || '----'}</h3> 
-        <div className='refresh' onClick={() => {cleanup(); connect();}}></div>
-      </div>
-      <p>Așteptǎm sa seconecteze toata lumea...</p>
+      <RoomCode />
+      <p className='mt-20'>Așteptǎm sa seconecteze toata lumea...</p>
     </div>
     <div className='joined-users'>
         <Users users={users} useNicknames={true}/>
