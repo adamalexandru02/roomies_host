@@ -3,7 +3,8 @@ import { persist } from 'zustand/middleware'
 
 import * as Nakama from "@heroiclabs/nakama-js"
 
-import { gameStore } from '../games/Desen/store/gameStore';
+import { gameStore as desenStore } from '../games/Desen/store/gameStore';
+import { gameStore as dannegruStore } from '../games/Dannegru/store/gameStore';
 
 export const useProjectStore = create((set, get) => ({
     client: null,
@@ -15,6 +16,7 @@ export const useProjectStore = create((set, get) => ({
     isHost: false,
     screen: 0,
     gameStarted: false,
+    game: null,
 
     isConnecting: false,
     isConnected: false,
@@ -33,9 +35,13 @@ export const useProjectStore = create((set, get) => ({
         console.log(newUsers);
         get().setUsers(newUsers);
     },
-    startGame: () => {
-      get().setScreen(2)
-      set({gameStarted: true});
+    selectGame: (game) => {
+      set({screen:2, gameStarted: true, game: game});
+      const payload ={
+          type: 'game_selected',
+          content: {game},
+      }
+      get().sendMessageToClients(payload)
     },
 
     async handleMessage(matchData) {
@@ -86,7 +92,12 @@ export const useProjectStore = create((set, get) => ({
                 break;
             }
 
-            default: gameStore.getState().handleMessage(matchData); break;
+            default: 
+            switch(get().game) {
+              case "desen": desenStore.getState().handleMessage(matchData); break;
+              case "dannegru": dannegruStore.getState().handleMessage(matchData); break;
+            }
+            break;
         }
     },
 

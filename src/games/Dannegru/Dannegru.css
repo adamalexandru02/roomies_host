@@ -33,8 +33,8 @@
   }
 }
 
-.desen {
-  background-color: #fff;
+.dannegru {
+  background-color: #e9e9e9;
   width: 100%;
   height: 100%;
   color: #000!important;
@@ -45,56 +45,56 @@
   font-family: 'SingleDay'!important;
 }
 
-.desen h1 {
+.dannegru h1 {
   font-size: 48px;
 }
 
-.desen h2 {
+.dannegru h2 {
   font-size: 36px;
 }
 
-.desen h3 {
+.dannegru h3 {
   font-size: 24px;
 }
 
-.desen p {
+.dannegru p {
   font-size: 18px;
 }
 
-.desen .card {
+.dannegru .card {
   display: flex;
   flex-direction: column;
+  width: 60vw;
   align-items: center;
   padding: 40px;
-  border-image-source: url('assets/images/sketch_border2.png');
-  border-image-slice: 45;        /* how much to slice inward from each edge */
-  border-image-width: 15px;      /* thickness of the border */
-  border-image-outset: 0;        /* optional offset */
-  border-image-repeat: stretch;  /* or round, repeat, space */
-  animation: skewit 2s ease-in infinite;
+  border: 3px solid #d0d0d0;
+  border-radius: 40px;
 }
 
-.desen .card img {
+.dannegru .card img {
   height: 300px;
 }
 
-.desen .card .preview {
+.dannegru .card .preview {
   width: 100px;
   height: auto;
 }
 
-.desen .card .user img {
+.dannegru .card .user img {
   width: 30px;
   height: 50px
 }
-.desen .user .label {
+.dannegru .user .label {
   padding:5px;
   border: 2px solid black;
   border-radius: 50%; 
   animation: 5s fadeScore ease-in;
 }
+.dannegru .user {
+  margin: 20px 20px;
+}
 
-.desen .button-desen {
+.dannegru .button-desen {
   cursor: pointer;
   display: flex;
   padding: 10px 30px;
@@ -107,32 +107,29 @@
   border-image-repeat: stretch;
   animation: skewit 2s ease-in infinite;
 }
-.desen .button-desen:hover {
+.dannegru .button-desen:hover {
   animation: skewit 0.5s ease-in infinite;
   transform: scale(3);
 
 }
 
-.desen .timer {
+.dannegru .timer {
   margin-top: 100px;
   font-size: 32px;
 }
 
-.desen .progress-bar {
+.dannegru .progress-bar {
   width: 50%;
-  padding: 10px;
+  padding: 5px;
 
   position: relative;
-  border-image-source: url('assets/images/sketch_borders.png');
-  border-image-slice: 60;
-  border-image-width: 10px;
-  border-image-outset: 0;
+  border: 3px solid black;
+  border-radius: 15px;
 }
-.desen .progress {
+.dannegru .progress {
   width: 40px;
   height: 10px;
-  border-radius: 2px;
-  transform: skew(10deg, 0deg);
+  border-radius: 5px;
   display: block;
   background-color: #000;
   transition: 0.05s ease-out;

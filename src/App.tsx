@@ -9,11 +9,12 @@ import RoomCode from './components/RoomCode'
 
 // Jocuri
 import Desen from './games/Desen/Desen'
+import Dannegru from './games/Dannegru/Dannegru'
 
 import deseneaza from './assets/images/deseneaza.png'
 
 const App = () => {
-  const { connect, cleanup, screen, setScreen } = useProjectStore()
+  const { connect, cleanup, screen, game, setScreen } = useProjectStore()
 
   useEffect(() => {
     connect()
@@ -26,7 +27,10 @@ const App = () => {
       <Intro />
       {screen == 0 && <Connect />}
       {screen == 1 && <ChoseGame />}
-      {screen == 2 && <Game><Desen /></Game>}
+      {screen == 2 && <Game>
+        {game === "desen" && <Desen />}
+        {game === "dannegru" && <Dannegru />}
+      </Game>}
     </>
   )
 }
@@ -93,14 +97,18 @@ const Connect = () => {
 }
 
 const ChoseGame = () => {
-  const { startGame } = useProjectStore();
+  const { selectGame } = useProjectStore();
   return (<>
     <div className={"box"}>
       <h1>Jocuri</h1>
       <div className="games">
-        <div className="game" onClick={() => startGame()}>
+        <div className="game" onClick={() => selectGame("desen")}>
           <img src={deseneaza}/>
           <span>Sa desenam</span>
+        </div>
+        <div className="game" onClick={() => selectGame("dannegru")}>
+          <img src={deseneaza}/>
+          <span>Dan Negru</span>
         </div>
       </div>
     </div>
